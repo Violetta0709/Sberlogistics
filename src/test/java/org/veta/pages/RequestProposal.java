@@ -36,12 +36,12 @@ public class RequestProposal {
     }
 
     public RequestProposal setNumber(String value) {
-        userPhone.setValue("1234567891");
+        userPhone.setValue(value);
         return this;
     }
 
     public RequestProposal setEmail(String value) {
-        userEmail.setValue("veta@veta.com");
+        userEmail.setValue(value);
         return this;
     }
 

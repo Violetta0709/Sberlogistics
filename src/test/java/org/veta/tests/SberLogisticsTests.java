@@ -1,10 +1,6 @@
 package org.veta.tests;
 
 import com.codeborne.pdftest.PDF;
-import com.codeborne.selenide.Configuration;
-import com.codeborne.selenide.Selenide;
-import com.google.common.collect.Ordering;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.veta.pages.*;
@@ -12,27 +8,18 @@ import org.veta.pages.*;
 import java.io.File;
 
 import static com.codeborne.pdftest.assertj.Assertions.assertThat;
-import static com.codeborne.selenide.Condition.text;
-import static com.codeborne.selenide.Condition.visible;
-import static com.codeborne.selenide.Configuration.baseUrl;
-import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.*;
+import static org.veta.tests.testdata.TestData.*;
 
-public class SberLogisticsTests {
+
+public class SberLogisticsTests extends TestBase {
     RequestProposal request = new RequestProposal();
     RegionalOffices regional = new RegionalOffices();
     BecomingPartner partner = new BecomingPartner();
     CustomClearance services = new CustomClearance();
     OrderingFreight freight = new OrderingFreight();
     TrackingParcel tracking = new TrackingParcel();
-
-    @BeforeAll
-    static void configure() {
-        baseUrl = "https://sberlogistics.ru";
-        Configuration.browserSize = "1920x1080";
-        Configuration.holdBrowserOpen = true;
-        Selenide.clearBrowserCookies();
-    }
+    UserAgreement content = new UserAgreement();
 
     //@Disabled
     @Test
@@ -40,9 +27,9 @@ public class SberLogisticsTests {
     void fillFormForProposalTest() {
         request.openPage()
                 .askProposal()
-                .setUserName("Veta")
-                .setNumber("9123456789")
-                .setEmail("veta@veta.com")
+                .setUserName(fullName)
+                .setNumber(phone)
+                .setEmail(email)
                 .clickSubmit()
                 .checkResult();
     }
@@ -66,11 +53,11 @@ public class SberLogisticsTests {
                 .connect()
                 .checkPickup()
                 .becomePartner()
-                .setUserName("Veta")
-                .setNumber("9123456789")
-                .setCity("xxxx")
-                .setEmail("veta@veta.com")
-                .setAddress("dfghj")
+                .setUserName(fullName)
+                .setNumber(phone)
+                .setCity(city)
+                .setEmail(email)
+                .setAddress(address)
                 .clickSubmit()
                 .checkResult();
     }
@@ -83,10 +70,10 @@ public class SberLogisticsTests {
                 .checkTitle()
                 .makeApplication()
                 .checkForm()
-                .setUserName("Veta")
-                .setNumber("3127456985")
-                .setEmail("veta@veta.com")
-                .uploadFile("pdf/3.pdf")
+                .setUserName(fullName)
+                .setNumber(phone)
+                .setEmail(email)
+                .uploadFile(filePath)
                 .clickSubmit()
                 .checkResult();
     }
@@ -100,32 +87,32 @@ public class SberLogisticsTests {
                 .popupClose()
                 .checkTitle1()
                 .checkTitle2()
-                .setShipmentAddress("Санкт-Петербург, Кременчугская 9")
-                .setShipmentDate("20" + "01" + "2023")
-                .setShipmentTime("11" + "00")
-                .setShipmentCompany("ООО")
-                .setShipmentPhone("9123456890")
-                .setShipmentName("Veta Veta")
+                .setShipmentAddress(address)
+                .setShipmentDate(shipDate)
+                .setShipmentTime(shipTime)
+                .setShipmentCompany(companyName)
+                .setShipmentPhone(phone)
+                .setShipmentName(fullName)
                 .checkAddShipment()
                 .checkTitle3()
-                .setDeliveryAddress("Москва, Кременчугская 9")
-                .setDeliveryDate("27" + "01" + "2023")
-                .setDeliveryTime("11" + "00")
-                .setDeliveryCompany("АААА")
-                .setDeliveryPhone("9123456789")
-                .setDeliveryName("Veta Veta")
+                .setDeliveryAddress(address)
+                .setDeliveryDate(delDate)
+                .setDeliveryTime(delTime)
+                .setDeliveryCompany(companyName)
+                .setDeliveryPhone(phone)
+                .setDeliveryName(fullName)
                 .checkAddDelivery()
-                .setCargoDescription("Мебель")
-                .selectPackType("Короб")
-                .setCargoQty("10")
-                .setCargoWeight("100")
-                .setCargoVolume("100")
+                .setCargoDescription(cargoType)
+                .selectPackType(packType)
+                .setCargoQty(cargoQty)
+                .setCargoWeight(cargoWeight)
+                .setCargoVolume(cargoVolume)
                 .checkAddCargo()
-                .selectTransportCapacity("1т / 7м3 / 3пал.")
-                .selectTransportType("Фургон (будка)")
-                .selectTransportLoadType("Задняя загрузка")
+                .selectTransportCapacity(transpCapacity)
+                .selectTransportType(transpType)
+                .selectTransportLoadType(loadType)
                 .checkExtraEquip()
-                .setDesiredCost("100000")
+                .setDesiredCost(cost)
                 .checkDocReturn()
                 .clickSubmit()
                 .checkResult();
@@ -135,10 +122,10 @@ public class SberLogisticsTests {
     @Test
     @DisplayName("Check user agreement content")
     void checkUserAgreementTest() throws Exception {
-        open("/about/documents/terms_of_use");
-        File downloadedFile = $("a[href*='https://sberlogistics.ru/uploads/documents/Пользовательское_соглашение.pdf']").download();
+        content.openPage();
+        File downloadedFile = content.getLink().download();
         PDF pdf = new PDF(downloadedFile);
-        assertThat(pdf.text).contains("ПОЛЬЗОВАТЕЛЬСКОЕ СОГЛАШЕНИЕ");
+        assertThat(pdf.text).contains(info);
     }
 
     //@Disabled
@@ -146,7 +133,7 @@ public class SberLogisticsTests {
     @DisplayName("Tracking parcel")
     void trackParcelTest() {
         tracking.openPage()
-                .setTrackingNumber("123456789")
+                .setTrackingNumber(tracknumber)
                 .clickSubmit()
                 .checkResult();
     }

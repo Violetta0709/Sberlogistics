@@ -36,8 +36,9 @@ dependencies {
             "org.slf4j:slf4j-simple:$slf4jVersion",
             "com.codeborne:selenide:6.7.4",
             "com.codeborne:pdf-test:1.7.0",
-            "org.assertj:assertj-core:3.23.1"
-
+            "org.assertj:assertj-core:3.23.1",
+            "com.github.javafaker:javafaker:1.0.2",
+            "io.qameta.allure:allure-selenide:2.19.0"
     )
 }
 
@@ -51,4 +52,7 @@ tasks.withType(Test) {
             exceptionFormat "short"
         }
     }
+}
+test {
+    useJUnitPlatform()
 }

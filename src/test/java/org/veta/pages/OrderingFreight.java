@@ -39,7 +39,7 @@ public class OrderingFreight {
             transportCapacity = $("#transport_capacity"),
             transportType = $("#transport_type"),
             transportLoadType = $("#transport_loading_type"),
-            additionalEquip = $(byText("Цепь")),
+            additionalEquip = $(".checkboxes-new__item"),
             desiredCost = $("#desired_cost"),
             docReturn = $("[for=documents_return]"),
             submit = $(byText("Оформить заявку")),

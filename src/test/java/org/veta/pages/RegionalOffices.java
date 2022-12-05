@@ -11,21 +11,22 @@ public class RegionalOffices {
 
     private SelenideElement
             pageIntro = $(".page-intro"),
-            city = $(byText("Барнаул")),
-            regionInfo = $(".region");
+            city = $(".columns-list__link"),
+            regionInfo = $(".region__offices");
+    private final static String TITLE_TEXT = "Региональные офисы";
 
     public RegionalOffices openPage() {
         open("/about/regions");
-        //$(".cookie-popup__button").click();
         return this;
     }
 
     public RegionalOffices checkTitle() {
-        pageIntro.shouldHave(text("Региональные офисы"));
+        pageIntro.shouldHave(text(TITLE_TEXT));
         return this;
     }
 
     public RegionalOffices chooseCity() {
+        //$(".cookie-popup__button").click();
         city.click();
         return this;
     }
